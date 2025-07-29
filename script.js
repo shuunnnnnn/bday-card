@@ -36,10 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Image Preloading
     function preloadImages(imageUrls, callback) {
         let loadedCount = 0;
-        const allImagesToPreload = [...imageUrls, animatedCake.src]; 
-        const totalImages = allImagesToPreload.length; 
+        const totalImages = imageUrls.length; 
 
-        allImagesToPreload.forEach(url => {
+        if (totalImages === 0) {
+            if (callback) callback();
+            return;
+        }
+
+        imageUrls.forEach(url => {
             const img = new Image();
             img.onload = () => {
                 loadedCount++;
@@ -50,6 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = url;
         });
     }
+
+    // --- Preload images as soon as the DOM is ready ---
+    preloadImages([...cakeAnimationFrames, cakeBlownOutFrame]);
 
     // Cake Animation
     function startCakeAnimation() {
@@ -72,17 +79,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isLightOn) return;
         isLightOn = true;
 
-        preloadImages([...cakeAnimationFrames, cakeBlownOutFrame], () => {
-            darkOverlay.classList.add('fade-out');
-            darkOverlay.addEventListener('transitionend', () => {
-                darkOverlay.classList.add('hidden');
-                cardContent.classList.remove('hidden');
-                cardContent.classList.add('visible');
-                startCakeAnimation();
-                toggleMusic(true);
-                musicToggleBtn.classList.remove('hidden');
-            }, { once: true });
-        });
+        darkOverlay.classList.add('fade-out');
+        darkOverlay.addEventListener('transitionend', () => {
+            darkOverlay.classList.add('hidden');
+            cardContent.classList.remove('hidden');
+            cardContent.classList.add('visible');
+            startCakeAnimation();
+            toggleMusic(true);
+            musicToggleBtn.classList.remove('hidden');
+        }, { once: true });
     }
 
     function blowCandles() {
