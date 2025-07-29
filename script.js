@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const controlsContainer = document.getElementById('controlsContainer');
     const musicToggleBtn = document.getElementById('musicToggleBtn');
     const restartCakeBtn = document.getElementById('restartCakeBtn');
+    const swipeInstruction = document.getElementById('swipeInstruction');
 
     let isLightOn = false;
     let candlesBlown = false;
@@ -109,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         triggerConfetti();
 
         setTimeout(() => {
+            initialScene.classList.add('hidden'); // Hide the initial scene
             cardStackContainer.classList.remove('hidden'); 
             cardStackContainer.classList.add('visible');
             showCard(0);
@@ -170,12 +172,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateNavButtons() {
         prevCardBtn.classList.toggle('hidden', currentCardIndex === 0);
-        nextCardBtn.classList.toggle('hidden', currentCardIndex === allCards.length - 1);
+        const isLastCard = currentCardIndex === allCards.length - 1;
+        nextCardBtn.classList.toggle('hidden', isLastCard);
+        
+        // Toggle instructions
+        swipeInstruction.classList.toggle('hidden', isLastCard);
         const enterInstruction = document.querySelector('.enter-instruction');
         if (enterInstruction) {
-            enterInstruction.classList.toggle('hidden', currentCardIndex !== allCards.length - 1);
+            enterInstruction.parentElement.classList.toggle('hidden', !isLastCard);
         }
-        if (currentCardIndex === allCards.length - 1) {
+        
+        if (isLastCard) {
             wishInput.focus();
         }
     }
