@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         triggerConfetti();
 
         setTimeout(() => {
-            initialScene.classList.add('hidden'); // Hide the initial scene
+            // The problematic line that hid the cake has been removed.
             cardStackContainer.classList.remove('hidden'); 
             cardStackContainer.classList.add('visible');
             showCard(0);
