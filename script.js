@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const darkOverlay = document.getElementById('darkOverlay');
-    const cardContent = document.getElementById('cardContent');
+    const initialScene = document.getElementById('initialScene');
     const birthdaySong = document.getElementById('birthdaySong');
     const blowCandlesText = document.getElementById('blowCandlesText');
     const animatedCake = document.getElementById('animatedCake');
@@ -14,7 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const prevCardBtn = document.getElementById('prevCardBtn');
     const nextCardBtn = document.getElementById('nextCardBtn');
+    
+    const controlsContainer = document.getElementById('controlsContainer');
     const musicToggleBtn = document.getElementById('musicToggleBtn');
+    const restartCakeBtn = document.getElementById('restartCakeBtn');
 
     let isLightOn = false;
     let candlesBlown = false;
@@ -61,6 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cake Animation
     function startCakeAnimation() {
         if (cakeAnimationInterval) clearInterval(cakeAnimationInterval);
+        // Reset to initial state before starting
+        candlesBlown = false;
+        animatedCake.src = cakeAnimationFrames[0];
+        blowCandlesText.classList.remove('faded');
+
         cakeAnimationInterval = setInterval(() => {
             currentFrameIndex = (currentFrameIndex + 1) % cakeAnimationFrames.length;
             animatedCake.src = cakeAnimationFrames[currentFrameIndex];
@@ -82,11 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
         darkOverlay.classList.add('fade-out');
         darkOverlay.addEventListener('transitionend', () => {
             darkOverlay.classList.add('hidden');
-            cardContent.classList.remove('hidden');
-            cardContent.classList.add('visible');
+            initialScene.classList.remove('hidden');
+            initialScene.classList.add('visible');
             startCakeAnimation();
             toggleMusic(true);
-            musicToggleBtn.classList.remove('hidden');
+            controlsContainer.classList.remove('hidden');
         }, { once: true });
     }
 
@@ -96,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         stopCakeAnimation();
         animatedCake.src = cakeBlownOutFrame;
-        // Apply a fade effect instead of hiding to prevent layout shift
         blowCandlesText.classList.add('faded');
         
         triggerConfetti();
@@ -226,11 +233,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners ---
     darkOverlay.addEventListener('click', turnOnLight);
-    cardContent.addEventListener('click', () => {
+    initialScene.addEventListener('click', () => {
         if (isLightOn && !candlesBlown) blowCandles();
     });
 
     musicToggleBtn.addEventListener('click', () => toggleMusic(!isMusicPlaying));
+    
+    // Restart button now hides message cards and shows the cake scene
+    restartCakeBtn.addEventListener('click', () => {
+        cardStackContainer.classList.add('hidden');
+        cardStackContainer.classList.remove('visible');
+        initialScene.classList.remove('hidden');
+        startCakeAnimation();
+    });
+
     prevCardBtn.addEventListener('click', () => navigateCard(-1));
     nextCardBtn.addEventListener('click', () => navigateCard(1));
 
