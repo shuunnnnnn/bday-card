@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         triggerConfetti();
 
         setTimeout(() => {
-            // The problematic line that hid the cake has been removed.
+            initialScene.classList.add('hidden');
             cardStackContainer.classList.remove('hidden'); 
             cardStackContainer.classList.add('visible');
             showCard(0);
@@ -227,25 +227,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 'Accept': 'application/json'
             }
         }).then(response => {
+            // This part runs AFTER the submission is complete
             if (response.ok) {
                 console.log("Wish submitted successfully!");
+                // Now animate the card away
+                wishForm.classList.add('sending');
+                const enterInstruction = document.querySelector('.enter-instruction');
+                if (enterInstruction) enterInstruction.classList.add('hidden'); 
+
+                wishForm.addEventListener('animationend', () => {
+                    cardStackContainer.classList.add('hidden');
+                }, { once: true });
             } else {
                 console.error("Form submission failed.");
+                // You could add an alert here to tell the user something went wrong
             }
         }).catch(error => {
             console.error("An error occurred:", error);
         });
-
-        // Animate the card away after attempting to send
-        wishForm.classList.add('sending');
-        const enterInstruction = document.querySelector('.enter-instruction');
-        if (enterInstruction) enterInstruction.classList.add('hidden'); 
-
-        wishForm.addEventListener('animationend', () => {
-            cardStackContainer.classList.add('hidden');
-        }, { once: true });
     }
-    
 
     // Swipe Gesture Handling
     function handleGesture() {
