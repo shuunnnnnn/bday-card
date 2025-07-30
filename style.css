@@ -142,8 +142,8 @@ body {
 
 .card-item {
     position: absolute;
-    width: 95%;
-    height: 70%;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -228,7 +228,7 @@ body {
     position: absolute;
     bottom: 25px;
     font-size: 0.9em;
-    color: var(--color-text-light);
+    color: var(--color-text-dark);
     font-style: italic;
     opacity: 0.6;
 }
@@ -311,13 +311,14 @@ body {
     100% { transform: translateY(100vh) rotateZ(720deg); opacity: 0; }
 }
 
-.wish-card-modal.sending {
+/* NEW: Animation for sending the wish and hiding the stack */
+.card-stack-container.sending {
     animation: zoom-out-send 0.8s ease-in forwards;
 }
 
 @keyframes zoom-out-send {
-    from { transform: scale(1); opacity: 1; }
-    to { transform: scale(0.1); opacity: 0; }
+    from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    to { transform: translate(-50%, -50%) scale(0.1); opacity: 0; }
 }
 
 .hidden { display: none !important; }
