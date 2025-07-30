@@ -212,53 +212,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const wishInput = document.getElementById('wishInput');
         const userWish = wishInput.value.trim();
 
-        // Don't send if the wish is empty
-        if (userWish === "") {
-            return; 
-        }
+        if (userWish === "") return;
 
         const formData = new FormData(wishForm);
-        
-        // Post the data to Formspree using Fetch
+
         fetch(wishForm.action, {
             method: 'POST',
             body: formData,
-            headers: {
-                'Accept': 'application/json'
-            }
+            headers: { 'Accept': 'application/json' }
         }).then(response => {
-            // This part runs AFTER the submission is complete
             if (response.ok) {
-                console.log("Wish submitted successfully!");
-                // Now animate the card away
-                wishForm.classList.add('sending');
-                const enterInstruction = document.querySelector('.enter-instruction');
-                if (enterInstruction) enterInstruction.classList.add('hidden'); 
-
-                wishForm.addEventListener('animationend', () => {
-                    cardStackContainer.classList.add('hidden');
-                }, { once: true });
+                console.log("Wish sent!");
+                // Add the sending class to the whole container to trigger the animation
+                cardStackContainer.classList.add('sending');
             } else {
                 console.error("Form submission failed.");
-                // You could add an alert here to tell the user something went wrong
             }
-        }).catch(error => {
-            console.error("An error occurred:", error);
-        });
+        }).catch(error => console.error("An error occurred:", error));
     }
 
     // Swipe Gesture Handling
     function handleGesture() {
         const swipedX = touchendX - touchstartX;
         const swipedY = touchendY - touchstartY;
-        const thresholdX = 50; // Minimum horizontal swipe distance
-        const thresholdY = 100; // Maximum vertical swipe distance to avoid conflict with scrolling
+        const thresholdX = 50;
+        const thresholdY = 100;
 
         if (Math.abs(swipedX) > Math.abs(swipedY) && Math.abs(swipedX) > thresholdX && Math.abs(swipedY) < thresholdY) {
             if (swipedX < 0) {
-                navigateCard(1); // Swiped left
+                navigateCard(1);
             } else {
-                navigateCard(-1); // Swiped right
+                navigateCard(-1);
             }
         }
     }
@@ -271,10 +255,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     musicToggleBtn.addEventListener('click', () => toggleMusic(!isMusicPlaying));
     
-    // Restart button now hides message cards and shows the cake scene
     restartCakeBtn.addEventListener('click', () => {
         cardStackContainer.classList.add('hidden');
-        cardStackContainer.classList.remove('visible');
+        cardStackContainer.classList.remove('visible', 'sending'); // Also remove sending class
         initialScene.classList.remove('hidden');
         startCakeAnimation();
     });
@@ -283,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
     nextCardBtn.addEventListener('click', () => navigateCard(1));
 
     allCards.forEach((card, index) => {
-        if (index < allCards.length - 1) { // Not for the last card
+        if (index < allCards.length - 1) {
             card.addEventListener('click', (event) => {
                 if (event.target === card || event.target.classList.contains('card-title') || event.target.classList.contains('card-message')) {
                      navigateCard(1);
@@ -305,7 +288,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Add touch listeners for swipe
     cardStackContainer.addEventListener('touchstart', e => {
         touchstartX = e.changedTouches[0].screenX;
         touchstartY = e.changedTouches[0].screenY;
