@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Variables for swipe controls
     let touchstartX = 0;
     let touchendX = 0;
-    let touchstartY = 0;
+    let touchstartY = 0; // To distinguish from vertical scrolls
     let touchendY = 0;
 
     // Cake Animation Configuration
@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cake Animation
     function startCakeAnimation() {
         if (cakeAnimationInterval) clearInterval(cakeAnimationInterval);
-        // Reset to initial state before starting
         candlesBlown = false;
         animatedCake.src = cakeAnimationFrames[0];
         blowCandlesText.classList.remove('faded');
@@ -110,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
         triggerConfetti();
 
         setTimeout(() => {
-            // This ensures the cake scene STAYS visible and the cards appear
             cardStackContainer.classList.remove('hidden'); 
             cardStackContainer.classList.add('visible');
             showCard(0);
@@ -177,12 +175,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Toggle instructions
         swipeInstruction.classList.toggle('hidden', isLastCard);
-        const enterInstruction = document.querySelector('.enter-instruction');
-        if (enterInstruction) {
-            // This needs to hide the parent form, not just the text
-            const wishForm = document.getElementById('wishCardModal');
-            wishForm.classList.toggle('hidden', !isLastCard);
-        }
+        
+        const wishForm = document.getElementById('wishCardModal');
+        wishForm.classList.toggle('hidden', !isLastCard);
         
         if (isLastCard) {
             wishInput.focus();
@@ -226,7 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => {
             if (response.ok) {
                 console.log("Wish sent!");
-                // Add the sending class to the whole container to trigger the animation
                 cardStackContainer.classList.add('sending');
             } else {
                 console.error("Form submission failed.");
@@ -239,22 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Swipe Gesture Handling
-    function handleGesture() {
-        const swipedX = touchendX - touchstartX;
-        const swipedY = touchendY - touchstartY;
-        const thresholdX = 50;
-        const thresholdY = 100;
-
-        if (Math.abs(swipedX) > Math.abs(swipedY) && Math.abs(swipedX) > thresholdX && Math.abs(swipedY) < thresholdY) {
-            if (swipedX < 0) {
-                navigateCard(1);
-            } else {
-                navigateCard(-1);
-            }
-        }
-    }
-
     // --- Event Listeners ---
     darkOverlay.addEventListener('click', turnOnLight);
     initialScene.addEventListener('click', () => {
@@ -264,7 +242,6 @@ document.addEventListener('DOMContentLoaded', () => {
     musicToggleBtn.addEventListener('click', () => toggleMusic(!isMusicPlaying));
     
     restartCakeBtn.addEventListener('click', () => {
-        // Hide message cards, show initial scene, and restart animation
         cardStackContainer.classList.add('hidden');
         cardStackContainer.classList.remove('visible', 'sending');
         initialScene.classList.remove('hidden');
@@ -273,8 +250,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     prevCardBtn.addEventListener('click', () => navigateCard(-1));
     nextCardBtn.addEventListener('click', () => navigateCard(1));
-
-    // The "tap to advance" code has been removed.
 
     wishInput.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
@@ -288,6 +263,24 @@ document.addEventListener('DOMContentLoaded', () => {
             turnOnLight();
         }
     });
+
+    // --- SWIPE LOGIC ---
+    function handleSwipe() {
+        const deltaX = touchendX - touchstartX;
+        const deltaY = touchendY - touchstartY;
+        const swipeThreshold = 50; // Minimum distance for a swipe
+
+        // Ensure it's a horizontal swipe, not a vertical scroll
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+            if (deltaX < 0) {
+                // Swiped Left
+                navigateCard(1);
+            } else {
+                // Swiped Right
+                navigateCard(-1);
+            }
+        }
+    }
     
     cardStackContainer.addEventListener('touchstart', e => {
         touchstartX = e.changedTouches[0].screenX;
@@ -297,6 +290,6 @@ document.addEventListener('DOMContentLoaded', () => {
     cardStackContainer.addEventListener('touchend', e => {
         touchendX = e.changedTouches[0].screenX;
         touchendY = e.changedTouches[0].screenY;
-        handleGesture();
+        handleSwipe();
     }, false);
 });
