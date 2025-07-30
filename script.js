@@ -208,19 +208,44 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Send Wish
     function sendWish() {
+        const wishForm = document.getElementById('wishCardModal');
+        const wishInput = document.getElementById('wishInput');
         const userWish = wishInput.value.trim();
-        console.log("[Flow] Wish submitted: " + userWish);
 
-        const wishCard = document.getElementById('wishCardModal');
-        wishCard.classList.add('sending');
+        // Don't send if the wish is empty
+        if (userWish === "") {
+            return; 
+        }
+
+        const formData = new FormData(wishForm);
         
+        // Post the data to Formspree using Fetch
+        fetch(wishForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                console.log("Wish submitted successfully!");
+            } else {
+                console.error("Form submission failed.");
+            }
+        }).catch(error => {
+            console.error("An error occurred:", error);
+        });
+
+        // Animate the card away after attempting to send
+        wishForm.classList.add('sending');
         const enterInstruction = document.querySelector('.enter-instruction');
         if (enterInstruction) enterInstruction.classList.add('hidden'); 
 
-        wishCard.addEventListener('animationend', () => {
+        wishForm.addEventListener('animationend', () => {
             cardStackContainer.classList.add('hidden');
         }, { once: true });
     }
+    
 
     // Swipe Gesture Handling
     function handleGesture() {
