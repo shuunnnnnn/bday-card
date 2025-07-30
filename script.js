@@ -226,6 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => {
             if (response.ok) {
                 console.log("Wish sent!");
+                // Add the sending class to the whole container to trigger the animation
                 cardStackContainer.classList.add('sending');
             } else {
                 console.error("Form submission failed.");
@@ -245,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const thresholdX = 50;
         const thresholdY = 100;
 
-        if (Math.abs(swipedX) > Math.abs(swipedY) && Math.abs(_swipedX) > thresholdX && Math.abs(swipedY) < thresholdY) {
+        if (Math.abs(swipedX) > Math.abs(swipedY) && Math.abs(swipedX) > thresholdX && Math.abs(swipedY) < thresholdY) {
             if (swipedX < 0) {
                 navigateCard(1);
             } else {
@@ -273,15 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
     prevCardBtn.addEventListener('click', () => navigateCard(-1));
     nextCardBtn.addEventListener('click', () => navigateCard(1));
 
-    allCards.forEach((card, index) => {
-        if (index < allCards.length - 1) {
-            card.addEventListener('click', (event) => {
-                if (event.target === card || event.target.classList.contains('card-title') || event.target.classList.contains('card-message')) {
-                     navigateCard(1);
-                }
-            });
-        }
-    });
+    // The "tap to advance" code has been removed.
 
     wishInput.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
