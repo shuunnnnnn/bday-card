@@ -202,7 +202,7 @@ body {
 .nav-button.next-card-btn { right: -60px; }
 
 .wish-card-modal textarea {
-    width: calc(100% - 30px);
+    width: 100%;
     min-height: 100px;
     padding: 15px;
     border: 1px solid rgba(224, 224, 224, 0.7);
