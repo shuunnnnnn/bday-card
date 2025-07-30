@@ -142,8 +142,8 @@ body {
 
 .card-item {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 95%;
+    height: 70%;
     display: flex;
     flex-direction: column;
     justify-content: center;
