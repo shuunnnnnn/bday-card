@@ -52,11 +52,13 @@
             <p class="card-message">Semoga semua kebaikan dan kebahagiaan yang kamu dambakan selalu datang kepadamu.</p>
         </div>
 
-        <div class="wish-card-modal card-item hidden" id="wishCardModal">
+        <form class="card-item hidden" id="wishCardModal" action="https://formspree.io/f/mldlljnq" method="POST">
             <h2 class="card-title">Write your wish!</h2>
-            <textarea id="wishInput" placeholder="Untuk apapun yang akan datang..."></textarea>
+            <textarea id="wishInput" name="wish" placeholder="Type your special birthday wish here..."></textarea>
             <p class="enter-instruction">Press Enter to Send</p> 
-        </div>
+        </form>
+
+        
 
         <button class="nav-button next-card-btn" id="nextCardBtn" aria-label="Next Card">
             <i class="fas fa-arrow-right"></i>
