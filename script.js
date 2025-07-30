@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         triggerConfetti();
 
         setTimeout(() => {
+            // This ensures the cake scene STAYS visible and the cards appear
             cardStackContainer.classList.remove('hidden'); 
             cardStackContainer.classList.add('visible');
             showCard(0);
@@ -178,7 +179,9 @@ document.addEventListener('DOMContentLoaded', () => {
         swipeInstruction.classList.toggle('hidden', isLastCard);
         const enterInstruction = document.querySelector('.enter-instruction');
         if (enterInstruction) {
-            enterInstruction.parentElement.classList.toggle('hidden', !isLastCard);
+            // This needs to hide the parent form, not just the text
+            const wishForm = document.getElementById('wishCardModal');
+            wishForm.classList.toggle('hidden', !isLastCard);
         }
         
         if (isLastCard) {
@@ -223,7 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => {
             if (response.ok) {
                 console.log("Wish sent!");
-                // Add the sending class to the whole container to trigger the animation
                 cardStackContainer.classList.add('sending');
             } else {
                 console.error("Form submission failed.");
@@ -243,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const thresholdX = 50;
         const thresholdY = 100;
 
-        if (Math.abs(swipedX) > Math.abs(swipedY) && Math.abs(swipedX) > thresholdX && Math.abs(swipedY) < thresholdY) {
+        if (Math.abs(swipedX) > Math.abs(swipedY) && Math.abs(_swipedX) > thresholdX && Math.abs(swipedY) < thresholdY) {
             if (swipedX < 0) {
                 navigateCard(1);
             } else {
@@ -261,8 +263,9 @@ document.addEventListener('DOMContentLoaded', () => {
     musicToggleBtn.addEventListener('click', () => toggleMusic(!isMusicPlaying));
     
     restartCakeBtn.addEventListener('click', () => {
-        cardStackContainer.classList.remove('visible', 'sending');
+        // Hide message cards, show initial scene, and restart animation
         cardStackContainer.classList.add('hidden');
+        cardStackContainer.classList.remove('visible', 'sending');
         initialScene.classList.remove('hidden');
         startCakeAnimation();
     });
