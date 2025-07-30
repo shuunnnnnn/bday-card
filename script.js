@@ -110,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
         triggerConfetti();
 
         setTimeout(() => {
-            initialScene.classList.add('hidden');
             cardStackContainer.classList.remove('hidden'); 
             cardStackContainer.classList.add('visible');
             showCard(0);
@@ -220,15 +219,21 @@ document.addEventListener('DOMContentLoaded', () => {
             method: 'POST',
             body: formData,
             headers: { 'Accept': 'application/json' }
-        }).then(response => {
+        })
+        .then(response => {
             if (response.ok) {
                 console.log("Wish sent!");
                 // Add the sending class to the whole container to trigger the animation
                 cardStackContainer.classList.add('sending');
             } else {
                 console.error("Form submission failed.");
+                alert("Sorry, your wish couldn't be sent right now.");
             }
-        }).catch(error => console.error("An error occurred:", error));
+        })
+        .catch(error => {
+            console.error("An error occurred:", error);
+            alert("An error occurred while sending your wish.");
+        });
     }
 
     // Swipe Gesture Handling
@@ -256,8 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
     musicToggleBtn.addEventListener('click', () => toggleMusic(!isMusicPlaying));
     
     restartCakeBtn.addEventListener('click', () => {
+        cardStackContainer.classList.remove('visible', 'sending');
         cardStackContainer.classList.add('hidden');
-        cardStackContainer.classList.remove('visible', 'sending'); // Also remove sending class
         initialScene.classList.remove('hidden');
         startCakeAnimation();
     });
